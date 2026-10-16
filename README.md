@@ -209,46 +209,6 @@ The project is currently under development.
 - PostgreSQL (required in later development stages)
 - Docker (optional during early development)
 
-### Clone Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/nsu-assistant.git
-cd nsu-assistant
-```
-
-Replace `YOUR_USERNAME` with the actual GitHub username or organization.
-
-### Run Go Backend
-
-Once the backend entry point is implemented:
-
-```bash
-cd backend
-go run ./cmd/server
-```
-
-The backend will be available at:
-
-```text
-http://localhost:8080
-```
-
-### Run Python Bot
-
-Once the bot is implemented:
-
-```bash
-cd bot
-
-python -m venv .venv
-source .venv/bin/activate
-
-pip install -r requirements.txt
-python main.py
-```
-
-Before running the bot, configure your Telegram bot token and backend URL.
-
 ## ⚙️ Configuration
 
 Configuration will be managed through environment variables.
@@ -327,30 +287,6 @@ The project is developed by two contributors.
 - User interaction
 - Backend API integration
 - Notification delivery
-
-## 🤝 Contributing
-
-Development takes place in separate Git branches.
-
-Recommended workflow:
-
-1. Create a new branch from `main`.
-2. Implement a feature or bug fix.
-3. Commit your changes.
-4. Push your branch to GitHub.
-5. Open a Pull Request.
-6. Review and merge changes.
-
-Example:
-
-```bash
-git checkout -b feature/schedule-api
-
-git add .
-git commit -m "feat: implement schedule API"
-
-git push origin feature/schedule-api
-```
 
 API changes must be documented in `docs/api.md`.
 
