@@ -10,8 +10,7 @@ import (
 )
 
 func main() {
-	handler := api.HealthHandler{}
-	http.Handle("/health", handler)
+	router := api.NewRouter()
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
