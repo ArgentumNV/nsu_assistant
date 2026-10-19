@@ -1,0 +1,8 @@
+CREATE TABLE users (
+    id BIGINT GENERATED ALWAYS AS IDENTITY,
+    telegram_id BIGINT NOT NULL UNIQUE,
+    group_id VARCHAR(20),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT pk_users PRIMARY KEY (id)
+);
