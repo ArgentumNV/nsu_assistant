@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -48,6 +49,7 @@ func (r *Repository) CreateUser(
 	return &user, nil
 }
 
+// SELECT
 func (r *Repository) GetUserByTelegramID(
 	ctx context.Context,
 	telegramID int64,
@@ -72,4 +74,25 @@ func (r *Repository) GetUserByTelegramID(
 	}
 
 	return &user, nil
+}
+
+// DELETE User by TelegramID
+func (r *Repository) DeleteUser(
+	ctx context.Context,
+	telegramID int64,
+) error {
+	query := `
+        DELETE FROM users
+		WHERE telegram_id = $1;
+    `
+
+	tag, err := r.pool.Exec(ctx, query, telegramID)
+	if err != nil {
+		return err
+	}
+	if tag.RowsAffected() == 0 {
+		return pgx.ErrNoRows
+	}
+
+	return nil
 }

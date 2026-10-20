@@ -110,3 +110,38 @@ func (u *UserHandler) GetUserByTelegramID(
 	}
 
 }
+
+func (u *UserHandler) DeleteUser(
+	w http.ResponseWriter,
+	r *http.Request,
+) {
+	if r.Method != http.MethodDelete {
+		w.Header().Set("Allow", "DELETE")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+
+	telegramIDStr := r.PathValue("telegram_id")
+	telegramID, err := strconv.ParseInt(telegramIDStr, 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid telegram_id", http.StatusBadRequest)
+		return
+	}
+	if telegramID <= 0 {
+		http.Error(w, "telegram_id must be > 0", http.StatusBadRequest)
+		return
+	}
+
+	err = u.repo.DeleteUser(r.Context(), telegramID)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			http.Error(w, "User not found", http.StatusNotFound)
+			return
+		}
+		log.Printf("DeleteUser failed: %v", err)
+		http.Error(w, "Server error", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
