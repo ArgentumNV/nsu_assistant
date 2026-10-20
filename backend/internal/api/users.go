@@ -31,11 +31,6 @@ func (u *UserHandler) CreateUser(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
-	if r.Method != http.MethodPost {
-		w.Header().Set("Allow", "POST")
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
 
 	var request CreateUserRequest
 
@@ -74,11 +69,6 @@ func (u *UserHandler) GetUserByTelegramID(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
-	if r.Method != http.MethodGet {
-		w.Header().Set("Allow", "GET")
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
 
 	telegramIDStr := r.PathValue("telegram_id")
 	telegramID, err := strconv.ParseInt(telegramIDStr, 10, 64)
@@ -115,11 +105,6 @@ func (u *UserHandler) DeleteUser(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
-	if r.Method != http.MethodDelete {
-		w.Header().Set("Allow", "DELETE")
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
 
 	telegramIDStr := r.PathValue("telegram_id")
 	telegramID, err := strconv.ParseInt(telegramIDStr, 10, 64)
