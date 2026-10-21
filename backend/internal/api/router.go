@@ -14,11 +14,15 @@ func NewRouter(repo *user.Repository) *http.ServeMux {
 	userHandler := NewUserHandler(repo)
 
 	mux.Handle("GET /health", HealthHandler{})
+
 	mux.Handle("GET /api/v1/schedule", ScheduleHandler{})
+
 	mux.Handle("GET /api/v1/groups", GroupsHandler{})
+
 	mux.HandleFunc("POST /api/v1/users", userHandler.CreateUser)
 	mux.HandleFunc("GET /api/v1/users/{telegram_id}", userHandler.GetUserByTelegramID)
 	mux.HandleFunc("DELETE /api/v1/users/{telegram_id}", userHandler.DeleteUser)
+	mux.HandleFunc("PATCH /api/v1/users/{telegram_id}", userHandler.UpdateUserGroup)
 
 	return mux
 }

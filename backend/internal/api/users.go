@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/ArgentumNV/nsu_assistant/backend/internal/user"
 	"github.com/jackc/pgx/v5"
@@ -25,6 +26,10 @@ func NewUserHandler(repo *user.Repository) *UserHandler {
 type CreateUserRequest struct {
 	TelegramID int64   `json:"telegram_id"`
 	GroupID    *string `json:"group_id"`
+}
+
+type UpdateUserGroupRequest struct {
+	GroupID *string `json:"group_id"`
 }
 
 func (u *UserHandler) CreateUser(
@@ -129,4 +134,51 @@ func (u *UserHandler) DeleteUser(
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func (u *UserHandler) UpdateUserGroup(
+	w http.ResponseWriter,
+	r *http.Request,
+) {
+	telegramIDStr := r.PathValue("telegram_id")
+	telegramID, err := strconv.ParseInt(telegramIDStr, 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid telegram_id", http.StatusBadRequest)
+		return
+	}
+	if telegramID <= 0 {
+		http.Error(w, "telegram_id must be > 0", http.StatusBadRequest)
+		return
+	}
+
+	var request UpdateUserGroupRequest
+
+	err = json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+		return
+	}
+
+	if request.GroupID == nil ||
+		strings.TrimSpace(*request.GroupID) == "" {
+		http.Error(w, "Invalid group_id", http.StatusBadRequest)
+		return
+	}
+
+	updatedUser, err := u.repo.UpdateUserGroup(r.Context(), telegramID, request.GroupID)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			http.Error(w, "User not found", http.StatusNotFound)
+			return
+		}
+		log.Printf("UpdateUser failed: %v", err)
+		http.Error(w, "Server error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	if err := json.NewEncoder(w).Encode(updatedUser); err != nil {
+		log.Printf("JSON encoding error: %v", err)
+	}
 }

@@ -96,3 +96,33 @@ func (r *Repository) DeleteUser(
 
 	return nil
 }
+
+func (r *Repository) UpdateUserGroup(
+	ctx context.Context,
+	telegramID int64,
+	groupID *string,
+) (*User, error) {
+	query := `
+        UPDATE users
+		SET group_id = $1
+		WHERE telegram_id = $2
+		RETURNING id, telegram_id, group_id, created_at;
+    `
+
+	row := r.pool.QueryRow(ctx, query, groupID, telegramID)
+	var updatedUser User
+
+	err := row.Scan(
+		&updatedUser.ID,
+		&updatedUser.TelegramID,
+		&updatedUser.GroupID,
+		&updatedUser.CreatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &updatedUser, nil
+
+}
