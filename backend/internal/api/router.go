@@ -19,6 +19,7 @@ func NewRouter(repo *user.Repository) *http.ServeMux {
 
 	mux.Handle("GET /api/v1/groups", GroupsHandler{})
 
+	// CRUD for User
 	mux.HandleFunc("POST /api/v1/users", userHandler.CreateUser)
 	mux.HandleFunc("GET /api/v1/users/{telegram_id}", userHandler.GetUserByTelegramID)
 	mux.HandleFunc("DELETE /api/v1/users/{telegram_id}", userHandler.DeleteUser)
