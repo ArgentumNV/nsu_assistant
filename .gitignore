@@ -21,6 +21,8 @@ coverage.html
 # Настройки IDE
 .idea/
 .vscode/
+.vs/
+*.user
 
 # Системные файлы
 .DS_Store
@@ -29,5 +31,9 @@ Thumbs.db
 
 
 # Сборка .NET
-bin/
 obj/
+
+# Секреты и локальные настройки
+appsettings.Development.json
+appsettings.Local.json
+*.secrets.json
