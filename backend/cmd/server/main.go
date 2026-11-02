@@ -11,12 +11,15 @@ import (
 	"github.com/ArgentumNV/nsu_assistant/backend/internal/api"
 	"github.com/ArgentumNV/nsu_assistant/backend/internal/user"
 	"github.com/ArgentumNV/nsu_assistant/backend/storage"
+	"github.com/joho/godotenv"
 )
 
 // main registers the API routes and runs the HTTP server until it fails.
 func main() {
+
 	log.Println("Starting NSU Assistant...")
 
+	_ = godotenv.Load("../../../.env")
 	databaseURL := os.Getenv("DATABASE_URL")
 	if databaseURL == "" {
 		log.Fatal("DATABASE_URL is not set")
